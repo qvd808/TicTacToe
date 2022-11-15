@@ -29,6 +29,38 @@ def draw_board(n, w, board):
 
     return game_obj
 
+def finishedGame(board):
+    n = len(board)
+    for i in range(n):
+        for j in range(n):
+            if board[i][j] == "":
+                return False
+    return True
+
+def checkWinner(board) -> bool:
+    n = len(board)
+    result = False
+    winner = 'tie'
+    for i in range(n):
+        player = board[i][0]
+        for j in range(1, n):
+            if player != board[i][j]:
+                return (result, None)
+    for i in range(n):
+        player = board[0][i]
+        for j in range(1, n):
+            if player != board[j][i]:
+                return (result, None)
+    for i in range(n):
+        if board[i][i] != board[0][0]:
+            return (result, None)
+    
+    for i in range(n):
+        if board[i][n - i -1] != board[0][2]:
+            return (result, None)
+    
+    return (not result, )
+
 
 def main():
 
@@ -68,6 +100,9 @@ def main():
         pygame.display.flip()
 
         clock.tick(30)
+
+        if finishedGame(board):
+            running = False
 
         screen.fill(BLACK)
 
