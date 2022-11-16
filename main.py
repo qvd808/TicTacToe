@@ -51,13 +51,13 @@ def checkWinner(board):
             winner = board[i][0]
 
     for i in range(n):
-        if board[0][i] == board[1][i] == board[2][i] and board[i][0] != "":
+        if board[0][i] == board[1][i] == board[2][i] and board[0][i] != "":
             winner = board[0][i]
 
-    if board[2][2] == board[1][1] == board[0][0] and board[i][0] != "":
+    if board[2][2] == board[1][1] == board[0][0] and board[0][0] != "":
         winner = board[0][0]
 
-    if board[0][2] == board[1][1] == board[2][0] and board[i][0] != "":
+    if board[0][2] == board[1][1] == board[2][0] and board[2][0] != "":
         winner = board[0][2]
 
     if winner != None:
@@ -95,6 +95,8 @@ def ai_move(board, players, ai):
 
 
 def minimax(board, depth, players, player):
+
+    print(player)
 
     result = checkWinner(board)
     if (result != False):
@@ -216,23 +218,23 @@ def main():
         screen.fill(BLACK)
 
 
-main()
+# main()
 
-# n = 3
-# w = 80
-# running = True
-# board = [["" for i in range(n)] for j in range(n)]
+n = 3
+w = 80
+running = True
+board = [["" for i in range(n)] for j in range(n)]
 
-# players = ['X', 'O']
-# current_player = random.randint(0, 1)
+players = ['X', 'O']
+current_player = random.randint(0, 1)
 
-# ai = random.randint(0, 1)
-# if ai == current_player:
-#     print('AI go first')
-# else:
-#     print('Human go first')
+ai = random.randint(0, 1)
+if ai == current_player:
+    print('AI go first')
+else:
+    print('Human go first')
 
-# print(board)
+print(board)
 # print(current_player)
-# minimax(board, 0, players, 1)
-# # ai_move(board, 0, players, 0)
+print(minimax(board, 0, players, 0))
+# ai_move(board, 0, players, 0)
