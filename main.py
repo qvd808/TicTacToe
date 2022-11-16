@@ -67,6 +67,15 @@ def checkWinner(board) -> bool:
             return 'tie'
         return False
 
+def ai_move(board):
+    n = len(board)
+    available = []
+    for i in range(n):
+        for j in range(n):
+            if board[i][j] == "":
+                available.append((i, j))
+
+    return random.choice(available)
 
 def main():
 
@@ -78,6 +87,12 @@ def main():
     players = ['X', 'O']
     current_player = random.randint(0, 1)
 
+    ai = random.randint(0, 1)
+    if ai == current_player:
+        print('AI go first')
+    else:
+        print('Human go first')
+
     game_obj = []
     clock = pygame.time.Clock()
 
@@ -87,14 +102,20 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        for obj in game_obj:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if obj.collidepoint(event.pos):
-                    i = obj.x // 80
-                    j = obj.y // 80
-                    if board[i][j] == "":
-                        board[i][j] = players[current_player]
-                        current_player = (current_player + 1) % len(players)
+        if current_player != ai:
+
+            for obj in game_obj:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if obj.collidepoint(event.pos):
+                        i = obj.x // 80
+                        j = obj.y // 80
+                        if board[i][j] == "":
+                            board[i][j] = players[current_player]
+                            current_player = (current_player + 1) % len(players)
+        else:
+            i, j = ai_move(board)
+            board[i][j] = players[ai]
+            current_player = (current_player + 1) % len(players)
 
         game_obj = draw_board(n, w, board)
 
