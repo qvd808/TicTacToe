@@ -59,7 +59,7 @@ def checkWinner(board) -> bool:
         if board[i][n - i -1] != board[0][2]:
             return (result, None)
     
-    return (not result, )
+    return (not result, winner)
 
 
 def main():
@@ -72,12 +72,11 @@ def main():
     players = ['X', 'O']
     current_player = random.randint(0, 1)
 
-
+    game_obj = []
     clock = pygame.time.Clock()
 
     while running: 
 
-        game_obj = draw_board(n,w, board)
 
 
         for event in pygame.event.get():
@@ -94,15 +93,20 @@ def main():
                         current_player = (current_player + 1) % len(players)
 
 
+        game_obj = draw_board(n,w, board)
         
         pygame.display.update()
 
         pygame.display.flip()
 
+        if finishedGame(board):
+            pygame.time.wait(2000)
+            running = False
+
+
         clock.tick(30)
 
-        if finishedGame(board):
-            running = False
+
 
         screen.fill(BLACK)
 
