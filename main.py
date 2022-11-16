@@ -75,7 +75,7 @@ def ai_move(board, players, ai):
             if board[i][j] == "":
                 available.append((i, j))
 
-    # i, j = random.choice(available)
+    # row, col = random.choice(available)
 
     bestScore = float('-inf')
     bestMove = 0, 0
@@ -83,10 +83,10 @@ def ai_move(board, players, ai):
     for move in available:
         i, j = move
         board[i][j] = players[ai]
-        value = minimax(board, 0, players, ai)
+        value = minimax(board, 0, players, 0)
         board[i][j] = ""
         if (value > bestScore):
-            value = bestScore
+            bestScore = value
             bestMove = move
 
     row, col = bestMove
@@ -96,48 +96,48 @@ def ai_move(board, players, ai):
 
 def minimax(board, depth, players, player):
 
-    print(player)
-
     result = checkWinner(board)
     if (result != False):
         if (result == 'X'):
-            return 1
-        elif (result == 'O'):
             return -1
+        elif (result == 'O'):
+            return 1
         else:
             return 0
+    
+    else:
 
-    n = len(board)
+        n = len(board)
 
-    if (player == 1):
-        maximizeValue = float('-inf')
+        if (player == 1):
+            maximizeValue = float('-inf')
 
-        for i in range(n):
-            for j in range(n):
-                if (board[i][j] != ""):
-                    continue
-                board[i][j] = players[player]
-                nextPlayer = (player + 1) % len(players)
-                staticEval = minimax(board, depth, players, nextPlayer)
-                maximizeValue = max(maximizeValue, staticEval)
-                board[i][j] = ""
+            for i in range(n):
+                for j in range(n):
+                    if (board[i][j] != ""):
+                        continue
+                    board[i][j] = players[player]
+                    nextPlayer = (player + 1) % len(players)
+                    staticEval = minimax(board, depth, players, nextPlayer)
+                    maximizeValue = max(maximizeValue, staticEval)
+                    board[i][j] = ""
 
-        return maximizeValue
+            return maximizeValue
 
-    if (player == 0):
-        minimizeValue = float('inf')
+        if (player == 0):
+            minimizeValue = float('inf')
 
-        for i in range(n):
-            for j in range(n):
-                if (board[i][j] != ""):
-                    continue
-                board[i][j] = players[player]
-                nextPlayer = (player + 1) % len(players)
-                staticEval = minimax(board, depth, players, nextPlayer)
-                minimizeValue = min(minimizeValue, staticEval)
-                board[i][j] = ""
-                
-        return minimizeValue
+            for i in range(n):
+                for j in range(n):
+                    if (board[i][j] != ""):
+                        continue
+                    board[i][j] = players[player]
+                    nextPlayer = (player + 1) % len(players)
+                    staticEval = minimax(board, depth, players, nextPlayer)
+                    minimizeValue = min(minimizeValue, staticEval)
+                    board[i][j] = ""
+                    
+            return minimizeValue
 
 
 def main():
@@ -150,7 +150,7 @@ def main():
     players = ['X', 'O']
     current_player = random.randint(0, 1)
 
-    ai = random.randint(0, 1)
+    ai = 1
     if ai == current_player:
         print('AI go first')
     else:
@@ -218,23 +218,23 @@ def main():
         screen.fill(BLACK)
 
 
-# main()
+main()
 
-n = 3
-w = 80
-running = True
-board = [["" for i in range(n)] for j in range(n)]
+# n = 3
+# w = 80
+# running = True
+# board = [["" for i in range(n)] for j in range(n)]
 
-players = ['X', 'O']
-current_player = random.randint(0, 1)
+# players = ['X', 'O']
+# current_player = random.randint(0, 1)
 
-ai = random.randint(0, 1)
-if ai == current_player:
-    print('AI go first')
-else:
-    print('Human go first')
+# ai = random.randint(0, 1)
+# if ai == current_player:
+#     print('AI go first')
+# else:
+#     print('Human go first')
 
-print(board)
-# print(current_player)
-print(minimax(board, 0, players, 0))
+# print(board)
+# # print(current_player)
+# print(minimax(board, 0, players, 0))
 # ai_move(board, 0, players, 0)
