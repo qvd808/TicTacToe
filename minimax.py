@@ -1,78 +1,116 @@
-board = [
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
-]
+class ScorePolicy():
+    def __init__(self) -> None:
+        pass
 
-players = ['X', 'O']
-ai = 1
+    def finishedGame(self, board):
+        n = len(board)
+        for i in range(n):
+            for j in range(n):
+                if board[i][j] == "":
+                    return False
+        return True
 
-def gameFinished(board):
-    for i in range(3):
-        for j in range(3):
-            if board[i][j] == "":
-                return False
-    return True
+    def checkWinnerBoard(self, board, players):
+        winner = None
 
-def checkWinner(board):
+        for player in players:
+            # check row
+            for i in range(3):
+                if board[i][0] == board[i][1] == board[i][2] == player:
+                    return player
 
-    for player in players:
+            for i in range(3):
+                if board[0][i] == board[1][i] == board[2][i] == player:
+                    return player
 
-        for i in range(3):
-            if board[i][0] == board[i][1] == board[i][2] == player:
+            if board[0][0] == board[1][1] == board[2][2] == player:
                 return player
 
-        for i in range(3):
-            if board[0][i] == board[1][i] == board[2][i] == player:
+            if board[0][2] == board[1][1] == board[2][0] == player:
                 return player
         
-        if board[2][2] == board[1][1] == board[0][0] == player:
-            return player
+        if self.finishedGame(board):
+            return "Tie"
+        else:
+            return winner
+        
 
-        if board[0][2] == board[1][1] == board[2][0] == player:
-            return player
+class MiniMax:
+    def __init__(self) -> None:
+        self.scorePolicy = ScorePolicy()
+
+    def getAvailableMove(self, board):
+        available = []
+        n = len(board)
+        for i in range(n):
+            for j in range(n):
+                if board[i][j] == "":
+                    available.append((i, j))
+        return available
     
-    if gameFinished(board):
-        return 'Tie'
+    def bestMove(self, board, depth, player):
+        players = ["X", "O"]
+        availableMove = self.getAvailableMove(board)
+
+        bestScore = float('-inf')
+        bestMove = None
+        for move in availableMove:
+            i, j = move
+            board[i][j] = players[player]
+            nextPlayer = (player + 1) % 2
+            staticValue = self.minimax(board, depth, players, nextPlayer)
+            board[i][j] = ""
+            if (staticValue > bestScore):
+                bestScore = staticValue
+                bestMove = move
+
+        return bestMove
+
+    def minimax(self, board, depth, players, player):
+        result = self.staticEvaluate(board, players)
+        if (result != None):
+            return result
+        else:
+            ## Maximize player
+            if (player == 1):
+                maximizeScore = float('-inf')
+
+                availableMove = self.getAvailableMove(board)
+                for move in availableMove:
+                    i, j = move
+                    board[i][j] = players[player]
+                    nextPlayer = (player + 1) % len(players)
+                    staticEval = self.minimax(board, depth, players, nextPlayer)
+                    board[i][j] = ""
+                    maximizeScore = max(staticEval, maximizeScore)
+
+                return maximizeScore
+
+            ## Minimize player
+            if (player == 0):
+                minimizeScore = float('inf')
+
+                availableMove = self.getAvailableMove(board)
+                for move in availableMove:
+                    i, j = move
+                    board[i][j] = players[player]
+                    nextPlayer = (player + 1) % len(players)
+                    staticEval = self.minimax(board, depth, players, nextPlayer)
+                    board[i][j] = ""
+                    minimizeScore = min(staticEval, minimizeScore)
+
+                return minimizeScore
+
+
+
     
-    return None
-
-def ai_move(board):
-    available = []
-    for i in range(3):
-        for j in range(3):
-            if board[i][j] == "":
-                available.append((i, j))
-    
-    bestScore = float('-inf')
-    bestMove = None
-    for move in available:
-        i, j = move
-        result = minimax(board, 0, ai)
-        if (result > bestScore):
-            bestScore = result
-            bestMove
-
-def draw_board(board):
-    print(board[0])
-    print(board[1])
-    print(board[2])
-
-
-def minimax(board, depth, player):
-    result = checkWinner(board)
-    if result == 'X':
-        return -1
-    elif result == 'O':
-        return 1
-    elif result == "tie":
-        return 0
-    else:
-
-        return 1
-
-
-draw_board(board)
-ai_move(board)
-# value = minimax(board, 0, player=ai)
-# print(value)
+    def staticEvaluate(self, board, players):
+        winner = self.scorePolicy.checkWinnerBoard(board, players)
+        if winner == 'X':
+            return -1
+        elif winner == "O":
+            return 1
+        elif winner == "Tie":
+            return 0
+        else:
+            return None

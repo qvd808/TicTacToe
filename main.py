@@ -83,7 +83,8 @@ def ai_move(board, players, ai):
     for move in available:
         i, j = move
         board[i][j] = players[ai]
-        value = minimax(board, 0, players, 0)
+        nextPlayer = (ai + 1) % 2
+        value = minimax(board, 0, players, nextPlayer)
         board[i][j] = ""
         if (value > bestScore):
             bestScore = value
